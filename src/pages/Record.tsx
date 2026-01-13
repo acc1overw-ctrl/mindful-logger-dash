@@ -38,14 +38,14 @@ export default function Record() {
       toast.error('Please add a description');
       return;
     }
-    
+
     if (selectedCategories.length === 0) {
       toast.error('Please select at least one category');
       return;
     }
 
     setIsSaving(true);
-    
+
     // Simulate save delay
     await new Promise(resolve => setTimeout(resolve, 600));
 
@@ -58,7 +58,7 @@ export default function Record() {
     });
 
     toast.success('Entry saved successfully!');
-    
+
     // Reset form
     setDescription('');
     setAudioUrl(undefined);
@@ -72,11 +72,11 @@ export default function Record() {
 
   return (
     <AppLayout>
-      <Header 
-        title="Record Entry" 
+      <Header
+        title="Record Entry"
         subtitle="Capture customer lifestyle choices and preferences"
       />
-      
+
       <div className="p-6 max-w-3xl mx-auto">
         <Card className="shadow-card animate-fade-in">
           <CardHeader className="pb-4">
@@ -85,12 +85,13 @@ export default function Record() {
               Record audio notes and summarize the customer's lifestyle choices
             </CardDescription>
           </CardHeader>
-          
+
           <CardContent className="space-y-6">
             {/* Audio Section */}
             <div className="space-y-3">
               <Label className="text-base">Audio Recording</Label>
               <AudioRecorder
+                hideRecorder
                 onAudioReady={(url, fileName) => {
                   setAudioUrl(url);
                   setAudioFileName(fileName);
@@ -118,7 +119,7 @@ export default function Record() {
             </div>
 
             {/* Categories Section */}
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
               <Label className="text-base">Lifestyle Categories</Label>
               <div className="flex flex-wrap gap-2">
                 {LIFESTYLE_CATEGORIES.map((category) => {
@@ -129,8 +130,8 @@ export default function Record() {
                       variant={isSelected ? "default" : "outline"}
                       className={cn(
                         "cursor-pointer transition-all duration-200 px-3 py-1.5 text-sm",
-                        isSelected 
-                          ? "bg-primary hover:bg-primary/90" 
+                        isSelected
+                          ? "bg-primary hover:bg-primary/90"
                           : "hover:bg-accent hover:text-accent-foreground"
                       )}
                       onClick={() => toggleCategory(category)}
@@ -141,7 +142,7 @@ export default function Record() {
                   );
                 })}
               </div>
-            </div>
+            </div> */}
 
             {/* Save Button */}
             <div className="pt-4 border-t border-border">

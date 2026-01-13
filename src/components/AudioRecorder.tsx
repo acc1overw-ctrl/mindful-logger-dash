@@ -7,9 +7,10 @@ interface AudioRecorderProps {
   onAudioReady: (url: string, fileName: string) => void;
   audioUrl?: string;
   onClear: () => void;
+  hideRecorder?: boolean
 }
 
-export function AudioRecorder({ onAudioReady, audioUrl, onClear }: AudioRecorderProps) {
+export function AudioRecorder({ onAudioReady, audioUrl, onClear, hideRecorder }: AudioRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
@@ -42,7 +43,7 @@ export function AudioRecorder({ onAudioReady, audioUrl, onClear }: AudioRecorder
       mediaRecorder.start();
       setIsRecording(true);
       setRecordingTime(0);
-      
+
       timerRef.current = window.setInterval(() => {
         setRecordingTime(prev => prev + 1);
       }, 1000);
@@ -71,7 +72,7 @@ export function AudioRecorder({ onAudioReady, audioUrl, onClear }: AudioRecorder
 
   const togglePlayback = () => {
     if (!audioRef.current || !audioUrl) return;
-    
+
     if (isPlaying) {
       audioRef.current.pause();
     } else {
@@ -91,28 +92,32 @@ export function AudioRecorder({ onAudioReady, audioUrl, onClear }: AudioRecorder
       <div className="flex items-center gap-3">
         {!audioUrl ? (
           <>
-            <Button
-              type="button"
-              variant={isRecording ? 'recording' : 'default'}
-              size="lg"
-              onClick={isRecording ? stopRecording : startRecording}
-              className="relative"
-            >
-              {isRecording ? (
-                <>
-                  <div className="absolute inset-0 rounded-lg bg-destructive animate-pulse-ring" />
-                  <Square className="h-5 w-5 relative z-10" />
-                  <span className="relative z-10">{formatTime(recordingTime)}</span>
-                </>
-              ) : (
-                <>
-                  <Mic className="h-5 w-5" />
-                  <span>Record Audio</span>
-                </>
-              )}
-            </Button>
+            {!hideRecorder &&
+              <>
+                <Button
+                  type="button"
+                  variant={isRecording ? 'recording' : 'default'}
+                  size="lg"
+                  onClick={isRecording ? stopRecording : startRecording}
+                  className="relative"
+                >
+                  {isRecording ? (
+                    <>
+                      <div className="absolute inset-0 rounded-lg bg-destructive animate-pulse-ring" />
+                      <Square className="h-5 w-5 relative z-10" />
+                      <span className="relative z-10">{formatTime(recordingTime)}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Mic className="h-5 w-5" />
+                      <span>Record Audio</span>
+                    </>
+                  )}
+                </Button>
 
-            <span className="text-sm text-muted-foreground">or</span>
+                <span className="text-sm text-muted-foreground">or</span>
+              </>
+            }
 
             <input
               type="file"
@@ -146,22 +151,22 @@ export function AudioRecorder({ onAudioReady, audioUrl, onClear }: AudioRecorder
                 <Play className="h-5 w-5" />
               )}
             </Button>
-            
+
             <div className="flex-1">
               <div className="h-1 rounded-full bg-muted overflow-hidden">
-                <div 
+                <div
                   className={cn(
                     "h-full bg-primary transition-all duration-300",
                     isPlaying ? "w-1/2" : "w-0"
-                  )} 
+                  )}
                 />
               </div>
             </div>
-            
+
             <span className="text-sm font-medium text-muted-foreground">
               Audio Ready
             </span>
-            
+
             <Button
               type="button"
               variant="ghost"
@@ -171,7 +176,7 @@ export function AudioRecorder({ onAudioReady, audioUrl, onClear }: AudioRecorder
             >
               <X className="h-4 w-4" />
             </Button>
-            
+
             <audio
               ref={audioRef}
               src={audioUrl}
